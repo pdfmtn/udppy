@@ -1,0 +1,74 @@
+#!/bin/python2.7
+# Exec sys pour tshark et foremost
+# os.system("tshark -r capture.pcapng -Y 'udp' -w capture_udp.pcap")
+# os.system("foremost -i capture.pcapng")
+import os
+import sys
+import hashlib
+import png
+
+chemin="/root/cours/foremost/png/"
+
+def raz():
+    os.remove(chemin+"hash.txt")
+    os.remove(chemin+"controlehash.txt")
+
+def frompython():
+    # liste les images
+    listeimage = os.listdir(chemin)
+    listeimage.remove("tdudp.py")
+#    listeimage.remove("test")
+    print len(listeimage)
+    #Definie liste acceuillant les hash
+    listehash = []
+    #Calcul du nombre d'image total
+    nombreimage = len(listeimage)
+    #Fichier ou reecrire les hash
+    stockagehash = open("hash.txt", "a")
+    #Compteur pour doublon
+    compteurdoubon = 0
+    #Pour i, allant de 0 au nombre d'image + 1, on ajoute dans listehash la somme md5 de chaque image a l'indice i
+    for i in range(0, nombreimage):
+        listehash.append(hashlib.md5(open(listeimage[i]).read()))
+    print "Liste HASH : " , listehash
+    #On cree une liste qui va contenir les hash en double
+    doublon = []
+    #Pour i allant de 0 a nombreimage +1 (254+1) et pour j allant de i + 1 a nombreimage - 1
+    # Si le hash a l'indice i est egale au hash a l'indice j, on ajoute le doublon a la liste doublon
+    # et on supprimer l'image que l'on retrouve a l'indice f sinon on erit dans le fichier
+    for i in range(0, nombreimage):
+	print "I = ", i
+        for f in range(i+1, nombreimage):
+	    print "F = ", f
+            if listehash[i].hexdigest() == listehash[f].hexdigest():
+                doublon.append(listehash[f])
+		print "Doublon : ", listehash[f]
+                os.remove(chemin+listeimage[f])
+                compteurdoubon =+1 
+        stockagehash.write(listehash[i].hexdigest()+"\n")
+    
+    os.system("awk '!x[$0]++' " + chemin + "hash.txt > " + chemin + "controlehash.txt")
+
+    # verif fichier png (entete etc)
+    for debut in range(0, nombreimage):
+        r = png.Reader(file='/root/TDUDP/foremost/png/' + listeimage[debut])
+        print "image", listeimage[debut], "\n"
+        r.read()
+
+
+#        parser = createParser(listeimage[debut])
+#        metadata = extractMetadata(parser)
+#        for line in metadata.exportPlaintext():
+#            print(line)
+# sessions = a.sessions()
+# for session in sessions:
+#     udp_payload = ""
+# for packet in sessions[session]:
+#     print packet
+
+if sys.argv[1] == "0":
+   frompython()
+elif sys.argv[1] == "1":
+   raz()
+else:
+   print "0 -> frompython", "\n","1 -> RAZ"
