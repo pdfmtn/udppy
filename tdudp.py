@@ -1,84 +1,82 @@
 #!/bin/python2.7
-#import pyshark
-#udp_payload=[]
-#capture = pyshark.FileCapture('capture.log',display_filter='udp port 22222')
-#udp_payload.append(bytearray.fromhex(capture.data.data).decode())
+# import pyshark
+# udp_payload=[]
+# capture = pyshark.FileCapture('capture.log',display_filter='udp port 22222')
+# udp_payload.append(bytearray.fromhex(capture.data.data).decode())
 import sys
 import os
 import scapy
-#import pyshark
+# import pyshark
 import pcapng
 import hashlib
 from PIL import Image
 
-#os.system("tshark -r capture.pcapng -Y 'udp' -w capture_udp.pcap")
-#os.system("foremost -i capture.pcapng")
+
+# os.system("tshark -r capture.pcapng -Y 'udp' -w capture_udp.pcap")
+# os.system("foremost -i capture.pcapng")
 def frompython():
-	listeimage = []
-	listeimage  = os.listdir("/root/cours/foremost/png/")
-	print listeimage
-	listeimage.remove("tdudp.py")
-	listehash2 = []
-	nombreimage = len(listeimage)
+    listeimage = os.listdir("/root/cours/foremost/png/")
+    print listeimage
+    listeimage.remove("tdudp.py")
+    listehash2 = []
+    nombreimage = len(listeimage)
 
-	stockagehash = open("../../hashpython.txt","a")
+    stockagehash = open("../../hashpython.txt", "a")
+    compteurdoubon = 0
+    comptehashunique = 0
+    for i in range(0, nombreimage):
+        listehash2.append(hashlib.md5(Image.open(listeimage[i]).tobytes()))
+        print listehash2[i];
 
-	for i in range (0,nombreimage):
-		listehash2.append(hashlib.md5(Image.open(listeimage[i]).tobytes())
-		print listehash[i]
-	compteurdoubon=0
-	comptehashunique = 0
-	for debut in range(0,):
-		for fin in range(debut+1,nombreimage):
-			if listehash2[debut] == listehash2[fin]:
-				listehash2.remove(fin)
-				compteurdoubon = compteurdoubon +1
-			else:
-				comptehashunique = comptehashunique +1
-	
+    for debut in range(0, nombreimage):
+        for fin in range(debut+1, nombreimage):
 
-	
-	print "Hash unique" , comptehashunique
-	print "Doublon" , compteurdoubon
+            if listehash2[debut] == listehash2[fin]:
+                listehash2.remove(fin)
+                compteurdoubon = compteurdoubon + 1
+            else:
+                comptehashunique = comptehashunique + 1
 
-	sessions = a.sessions()	
-	for session in sessions:
-		udp_payload = ""
-		for packet in sessions[session]:
-			print packet
+        print "Hash unique", comptehashunique
+        print "Doublon", compteurdoubon
+
+        sessions = a.sessions()
+        for session in sessions:
+            udp_payload = ""
+        for packet in sessions[session]:
+            print packet
+
+
 def fromfile():
+    hashnontrier = open("hashnontrier.txt", "r")
+    hashtrier = open("hashtrier.txt", "a")
+
+    listehash = []
+    listehash = hashnontrier.readlines()
+
+    nombreligne = len(listehash)
+    compteurdoubon = 0
+    comptehashunique = 0
+    for debut in range(0, nombreligne):
+        for fin in range(debut + 1, nombreligne):
+            if listehash[debut] == listehash[fin]:
+                listehash.remove(fin)
+                compteurdoubon = compteurdoubon + 1
+            else:
+                comptehashunique = comptehashunique + 1
+
+        hashnontrier.write(listehash[debut])
+
+    print "Hash unique", comptehashunique
+    print "Doublon", compteurdoubon
+
+    hashnontrier.close()
+    hashtrier.close()
 
 
-	hashnontrier = open("hashnontrier.txt","r")
-	hashtrier = open("hashtrier.txt","a")
-
-	listehash = []
-	listehash = hashnontrier.readlines()
-
-	nombreligne = len(listehash)
-	compteurdoubon = 0
-	comptehashunique = 0
-	for debut in range(0,nombreligne):
-		for fin in range(debut+1,nombreligne):
-			if listehash[debut] == listehash[fin]:
-				listehash.remove(fin)
-				compteurdoubon = compteurdoubon +1
-			else:
-				comptehashunique = comptehashunique +1
-	
-		hashnontrier.write(listehash[debut])
-	
-	print "Hash unique" , comptehashunique
-	print "Doublon" , compteurdoubon
-
-	hashnontrier.close()
-	hashtrier.close()
-			
-			
 if sys.argv[1] == "0":
-	fromfile()
+    fromfile()
 elif sys.argv[1] == "1":
-	frompython()
+    frompython()
 else:
-	print "0 -> depuis fichier" , "\n" , "1 -> depuis python"
-
+    print "0 -> depuis fichier", "\n", "1 -> depuis python"
