@@ -14,11 +14,13 @@ import pcapng
 import hashlib
 import pypng
 from PIL import Image
-
-
+from hachoir.parser import createParser
+from hachoir.metadata import extractMetadata
+#Exec sys pour tshark et foremost
 # os.system("tshark -r capture.pcapng -Y 'udp' -w capture_udp.pcap")
 # os.system("foremost -i capture.pcapng")
 def frompython():
+    #liste les images
     listeimage = os.listdir("/root/cours/foremost/png/")
     print listeimage
     listeimage.remove("tdudp.py")
@@ -28,10 +30,11 @@ def frompython():
     stockagehash = open("../../hashpython.txt", "a")
     compteurdoubon = 0
     comptehashunique = 0
+    #calcule les hash et ajoute a listehash2
     for i in range(0, nombreimage):
         listehash2.append(hashlib.md5(Image.open(listeimage[i]).tobytes()))
         print listehash2[i]
-
+    #controle des doublon
     for debut in range(0, nombreimage):
         for fin in range(debut+1, nombreimage):
             if listehash2[debut] == listehash2[fin]:
@@ -44,11 +47,15 @@ def frompython():
 
         print "Hash unique", comptehashunique
         print "Doublon", compteurdoubon
-
+    # verif fichier png (entete etc)
     for debut in range(0,nombreimage):
         r = png.Reader(file='/root/TDUDP/foremost/png/'+ listeimage[debut])
-        print "image", listeimage[debut] , \n
+        print "image", listeimage[debut] , "\n"
         r.read()
+        parser = createParser(listeimage[debut])
+        metadata = extractMetadata(parser)
+        for line in metadata.exportPlaintext():
+            print(line)
         # sessions = a.sessions()
         # for session in sessions:
         #     udp_payload = ""
