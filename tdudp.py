@@ -5,10 +5,14 @@
 # udp_payload.append(bytearray.fromhex(capture.data.data).decode())
 import sys
 import os
+import urllib
+
+import png
 import scapy
 # import pyshark
 import pcapng
 import hashlib
+import pypng
 from PIL import Image
 
 
@@ -26,25 +30,30 @@ def frompython():
     comptehashunique = 0
     for i in range(0, nombreimage):
         listehash2.append(hashlib.md5(Image.open(listeimage[i]).tobytes()))
-        print listehash2[i];
+        print listehash2[i]
 
     for debut in range(0, nombreimage):
         for fin in range(debut+1, nombreimage):
-
             if listehash2[debut] == listehash2[fin]:
                 listehash2.remove(fin)
+                os.remove(listeimage[debut])
                 compteurdoubon = compteurdoubon + 1
             else:
+                stockagehash.write(listehash2[debut])
                 comptehashunique = comptehashunique + 1
 
         print "Hash unique", comptehashunique
         print "Doublon", compteurdoubon
 
-        sessions = a.sessions()
-        for session in sessions:
-            udp_payload = ""
-        for packet in sessions[session]:
-            print packet
+    for debut in range(0,nombreimage):
+        r = png.Reader(file='/root/TDUDP/foremost/png/'+ listeimage[debut])
+        print "image", listeimage[debut] , \n
+        r.read()
+        # sessions = a.sessions()
+        # for session in sessions:
+        #     udp_payload = ""
+        # for packet in sessions[session]:
+        #     print packet
 
 
 def fromfile():
